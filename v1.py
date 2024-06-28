@@ -9,4 +9,4 @@ prompt = st.text_area("enter your prompt:")
 if st.button("Ask"):
     if prompt:
         with st.spinner("please wait....."):
-            st.write(llm.stream(prompt, stop=['<|eot_id|>']))
+            st.write(llm.stream(prompt, stop=['<|eot_id|>'])) 
