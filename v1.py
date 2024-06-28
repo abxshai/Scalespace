@@ -1,6 +1,15 @@
 from langchain_community.llms import Ollama
 import streamlit as st
+import requests
 llm = Ollama(model = "llama3")
+
+
+try:
+    response = requests.get("http://localhost:11434/api/generate")
+    print(response.status_code)
+    print(response.text)
+except requests.exceptions.RequestException as e:
+    print(f"Error: {e}")
 
 
 
