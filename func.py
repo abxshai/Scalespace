@@ -1,6 +1,5 @@
 import streamlit as st
-import groq
-from groq import Groq
+import Groq
 import time
 
 # Replace 'your_api_key_here' with your actual API key
