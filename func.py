@@ -11,11 +11,18 @@ client = Groq(api_key=API_KEY)
 def get_llm_reply(prompt):
     completion = client.chat.completions.create(
         model="llama3-8b-8192",
-        messages=[
+        messages=
+        [
+           {
+            "role": "system", #two, one is for prompt, the other for user content 
+            "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
+           },
+           
             {
-                "role": "user",
-                "content": prompt
-            }
+              "role": "user",
+              "content": prompt
+            },
+        
         ],
         temperature=1,
         max_tokens=1024,
