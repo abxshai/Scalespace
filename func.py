@@ -13,7 +13,7 @@ def get_llm_reply(prompt):
         model="llama3-8b-8192",
         messages=[
             {
-                "role": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues.",
+                "role": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
                 "content": prompt
             }
         ],
