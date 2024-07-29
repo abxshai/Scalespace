@@ -7,7 +7,7 @@ import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = ''
+API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
@@ -92,14 +92,14 @@ if uploaded_file is not None:
     st.write("Parsed Resume Data:")
     st.dataframe(df)
 
-    if st.button("Send to Groq API"):
+    if st.button("Get Review"):
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume:\n\n{pdf_text}"
             word_placeholder = st.empty()
             get_llm_reply(prompt)
 else:
     prompt = st.text_input("Enter your message:", "")
-    if st.button("Send"):
+    if st.button("Ask"):
         if prompt:
             with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
