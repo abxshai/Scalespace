@@ -7,7 +7,7 @@ import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = ''
 
 client = Groq(api_key=API_KEY)
 
@@ -52,6 +52,14 @@ def parse_pdf_to_dataframe(pdf_text):
     df = pd.DataFrame(data)
     return df
 
+# Streamlit configuration for theme
+st.set_page_config(
+    page_title="Copilot for your Career",
+    page_icon="💼",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 # CSS to inject contained in a string
 css = """
 <style>
@@ -59,9 +67,12 @@ css = """
         background-color: black;
     }
     .gradient-text {
-        background: -webkit-linear-gradient(left, #f0f0f0, #32CD32);
+        background: -webkit-linear-gradient(left, #ff7e5f, #feb47b);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+    }
+    .stTextInput > div > div > input {
+        font-family: monospace;
     }
 </style>
 """
@@ -80,14 +91,14 @@ if uploaded_file is not None:
     st.write("Parsed Resume Data:")
     st.dataframe(df)
 
-    if st.button("Get Review"):
+    if st.button("Send to Groq API"):
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume:\n\n{pdf_text}"
             word_placeholder = st.empty()
             get_llm_reply(prompt)
 else:
     prompt = st.text_input("Enter your message:", "")
-    if st.button("Ask"):
+    if st.button("Send"):
         if prompt:
             with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
