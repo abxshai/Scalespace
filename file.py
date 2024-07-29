@@ -13,7 +13,7 @@ client = Groq(api_key=API_KEY)
 
 def get_llm_reply(prompt):
     completion = client.chat.completions.create(
-        model="llama-3.1-70b-versatile",
+        model="llama3-8b-8192",
         messages=[
            {
             "role": "system",
@@ -55,7 +55,7 @@ def parse_pdf_to_dataframe(pdf_text):
 # Streamlit configuration for theme
 st.set_page_config(
     page_title="Copilot for your Career",
-    page_icon="*",
+    page_icon="💼",
     layout="wide",
     initial_sidebar_state="expanded",
 )
@@ -63,16 +63,16 @@ st.set_page_config(
 # CSS to inject contained in a string
 css = """
 <style>
+    body, .css-1n76uvr, .css-1v3fvcr, .css-6qob1r, .css-1oe6wy4, .css-qbe2hs, .css-1d391kg, .css-15zrgzn {
+        font-family: monospace;
+    }
     body {
         background-color: black;
     }
     .gradient-text {
-        background: -webkit-linear-gradient(left, #f0f0f0, #32CD32, #000000);
+        background: -webkit-linear-gradient(left, #ff7e5f, #feb47b);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-    }
-    .stTextInput > div > div > input {
-        font-family: monospace;
     }
 </style>
 """
@@ -91,14 +91,14 @@ if uploaded_file is not None:
     st.write("Parsed Resume Data:")
     st.dataframe(df)
 
-    if st.button("Get Review"):
+    if st.button("Send to Groq API"):
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume:\n\n{pdf_text}"
             word_placeholder = st.empty()
             get_llm_reply(prompt)
 else:
     prompt = st.text_input("Enter your message:", "")
-    if st.button("Ask"):
+    if st.button("Send"):
         if prompt:
             with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
