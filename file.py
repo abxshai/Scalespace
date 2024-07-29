@@ -55,8 +55,7 @@ def parse_pdf_to_dataframe(pdf_text):
     return df
 
 st.title("Copilot for your Career")
-
-uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
+uploaded_file = st.file_uploader("Upload your resume for custom review (PDF format)", type=["pdf"])
 
 if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
