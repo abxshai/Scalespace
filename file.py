@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
-import fitz  # PyMuPDF
+from PyPDF2 import PdfFileReader
 from groq import Groq
 from typing import Generator
 import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = ''
 
 client = Groq(api_key=API_KEY)
 
@@ -39,23 +39,22 @@ def get_llm_reply(prompt):
         time.sleep(0.1)  # Add a slight delay for smoother streaming effect
     return response
 
-def extract_text_from_pdf(pdf_file):
-    pdf_document = fitz.open(stream=pdf_file.read(), filetype="pdf")
+def extract_text_from_pdf(file):
+    pdf = PdfFileReader(file)
     text = ""
-    for page_num in range(len(pdf_document)):
-        page = pdf_document.load_page(page_num)
-        text += page.get_text()
+    for page_num in range(pdf.getNumPages()):
+        page = pdf.getPage(page_num)
+        text += page.extractText()
     return text
 
 def parse_pdf_to_dataframe(pdf_text):
-    # Placeholder function to convert PDF text to DataFrame
-    # Modify this according to the structure of your PDF and the data you need
     data = {"text": [pdf_text]}
     df = pd.DataFrame(data)
     return df
 
 st.title("Copilot for your Career")
-uploaded_file = st.file_uploader("Upload your resume for custom review (PDF format)", type=["pdf"])
+
+uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
 
 if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
@@ -63,14 +62,14 @@ if uploaded_file is not None:
     st.write("Parsed Resume Data:")
     st.dataframe(df)
 
-    if st.button("Get Review"):
+    if st.button("Send to Groq API"):
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume:\n\n{pdf_text}"
             word_placeholder = st.empty()
             get_llm_reply(prompt)
 else:
     prompt = st.text_input("Enter your message:", "")
-    if st.button("Ask"):
+    if st.button("Send"):
         if prompt:
             with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
