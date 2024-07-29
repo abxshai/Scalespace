@@ -101,7 +101,7 @@ else:
     if st.button("Ask"):
         if prompt:
             with st.spinner("Generating response..."):
-                word_placeholder = st.empty()
+                word_placeholder = st.stream()
                 get_llm_reply(prompt)
         else:
             st.error("Please enter a message.")
