@@ -55,7 +55,7 @@ def parse_pdf_to_dataframe(pdf_text):
 # Streamlit configuration for theme
 st.set_page_config(
     page_title="Copilot for your Career",
-    page_icon="💼",
+    page_icon="*",
     layout="wide",
     initial_sidebar_state="expanded",
 )
