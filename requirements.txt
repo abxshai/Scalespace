@@ -2,4 +2,4 @@ streamlit
 groq
 pandas
 PyPDF2
-PdfFileReader
+
