@@ -52,7 +52,25 @@ def parse_pdf_to_dataframe(pdf_text):
     df = pd.DataFrame(data)
     return df
 
-st.title("Copilot for your Career")
+# CSS to inject contained in a string
+css = """
+<style>
+    body {
+        background-color: black;
+    }
+    .gradient-text {
+        background: -webkit-linear-gradient(left, #ff7e5f, #feb47b);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+"""
+
+# Inject CSS with markdown
+st.markdown(css, unsafe_allow_html=True)
+
+# Title with gradient text
+st.markdown('<h1 class="gradient-text">Copilot for your Career</h1>', unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
 
@@ -62,7 +80,7 @@ if uploaded_file is not None:
     st.write("Parsed Resume Data:")
     st.dataframe(df)
 
-    if st.button("Get Review"):
+    if st.button("Send to Groq API"):
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume:\n\n{pdf_text}"
             word_placeholder = st.empty()
