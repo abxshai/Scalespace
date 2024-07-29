@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import PyPDF2 
 from PyPDF2 import PdfFileReader 
 from groq import Groq
 from typing import Generator
