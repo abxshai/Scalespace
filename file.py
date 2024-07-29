@@ -7,13 +7,13 @@ import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = ''
 
 client = Groq(api_key=API_KEY)
 
 def get_llm_reply(prompt):
     completion = client.chat.completions.create(
-        model="llama3-8b-8192",
+        model="llama-3.1-70b-versatile",
         messages=[
            {
             "role": "system",
@@ -73,6 +73,7 @@ css = """
         background: -webkit-linear-gradient(left, #f0f0f0, #32CD32);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        font-family: monospace;
     }
 </style>
 """
