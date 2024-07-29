@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from PyPDF2 import PdfFileReader 
+from PyPDF2 import PdfReader
 from groq import Groq
 from typing import Generator
 import time
@@ -40,11 +40,11 @@ def get_llm_reply(prompt):
     return response
 
 def extract_text_from_pdf(file):
-    pdf = PdfFileReader(file)
+    pdf = PdfReader(file)
     text = ""
-    for page_num in range(pdf.getNumPages()):
-        page = pdf.getPage(page_num)
-        text += page.extractText()
+    for page_num in range(len(pdf.pages)):
+        page = pdf.pages[page_num]
+        text += page.extract_text()
     return text
 
 def parse_pdf_to_dataframe(pdf_text):
