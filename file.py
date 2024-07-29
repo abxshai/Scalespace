@@ -59,7 +59,7 @@ css = """
         background-color: black;
     }
     .gradient-text {
-        background: -webkit-linear-gradient(left, #f0f0f0, #feb47b);
+        background: -webkit-linear-gradient(left, #000000, #feb47b);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
