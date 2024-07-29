@@ -36,7 +36,7 @@ def get_llm_reply(prompt):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
-        time.sleep(0.1)  # Add a slight delay for smoother streaming effect
+        time.sleep(0.01)  # Add a slight delay for smoother streaming effect
     return response
 
 def extract_text_from_pdf(file):
