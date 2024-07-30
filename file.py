@@ -75,6 +75,19 @@ css = """
         -webkit-text-fill-color: transparent;
         font-family: monospace;
     }
+    .stTextInput, .stButton button {
+        font-family: monospace;
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        border: 1px solid #87CEEB;
+    }
+    .stTextInput > div > div > input {
+        font-family: monospace;
+    }
+    .stButton button {
+        font-family: monospace;
+    }
 </style>
 """
 
