@@ -86,6 +86,9 @@ css = """
         font-family: monospace;
     }
     .stButton button {
+         font-family: monospace;
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
         font-family: monospace;
     }
 </style>
