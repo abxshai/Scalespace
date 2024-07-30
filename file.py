@@ -79,6 +79,7 @@ css = """
         font-family: monospace;
         background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
         -webkit-background-clip: text;
+        font-family: monospace;
 
     }
     .stTextInput > div > div > input {
