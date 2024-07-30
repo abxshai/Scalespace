@@ -70,7 +70,7 @@ css = """
         background-color: black;
     }
     .gradient-text {
-        background: -webkit-linear-gradient(left, #f0f0f0, #87CEEB, #FF00FF);
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-family: monospace;
