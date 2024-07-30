@@ -79,19 +79,35 @@ css = """
         font-family: monospace;
         background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
         -webkit-background-clip: text;
-        font-family: monospace;
-
+        -webkit-text-fill-color: transparent;
+        border: 1px solid #87CEEB;
     }
     .stTextInput > div > div > input {
         font-family: monospace;
     }
     .stButton button {
-         font-family: monospace;
-        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
-        -webkit-background-clip: text;
         font-family: monospace;
     }
+    #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+    }
+    .content {
+        position: fixed;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        color: #f1f1f1;
+        width: 100%;
+        padding: 20px;
+    }
 </style>
+<video autoplay muted loop id="myVideo">
+    <source src="https://static.streamlit.io/examples/star.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
 """
 
 # Inject CSS with markdown
