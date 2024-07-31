@@ -3,7 +3,6 @@ import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
 from typing import Generator
-import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
