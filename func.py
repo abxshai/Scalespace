@@ -1,7 +1,12 @@
 import streamlit as st
-from typing import Generator
+import pandas as pd
+from PyPDF2 import PdfReader
 from groq import Groq
+from bs4 import BeautifulSoup
+import requests
+from typing import Generator
 import time
+import io
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
@@ -10,19 +15,16 @@ client = Groq(api_key=API_KEY)
 
 def get_llm_reply(prompt):
     completion = client.chat.completions.create(
-        model="llama3-8b-8192",
-        messages=
-        [
+        model="llama-3.1-70b-versatile",
+        messages=[
            {
-            "role": "system", #two, one is for prompt, the other for user content 
+            "role": "system",
             "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
            },
-           
-            {
+           {
               "role": "user",
               "content": prompt
             },
-        
         ],
         temperature=1,
         max_tokens=1024,
@@ -36,17 +38,136 @@ def get_llm_reply(prompt):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
-        time.sleep(0.1)  # Add a slight delay for smoother streaming effect
+          # Add a slight delay for smoother streaming effect
     return response
 
-st.title("Copilot for your Career")
+def extract_text_from_pdf(file):
+    pdf = PdfReader(file)
+    text = ""
+    for page_num in range(len(pdf.pages)):
+        page = pdf.pages[page_num]
+        text += page.extract_text()
+    return text
 
-prompt = st.text_input("Enter your message:", "")
+def parse_pdf_to_dataframe(pdf_text):
+    data = {"text": [pdf_text]}
+    df = pd.DataFrame(data)
+    return df
 
-if st.button("Send"):
-    if prompt:
-        with st.spinner("Generating response..."):
+def scrape_linkedin_profile(url):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, "html.parser")
+        profile_text = soup.get_text(separator="\n")
+        return profile_text
+    else:
+        return None
+
+# Streamlit configuration for theme
+st.set_page_config(
+    page_title="Copilot for your Career",
+    page_icon="*",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
+# CSS to inject contained in a string
+css = """
+<style>
+    body, .css-1n76uvr, .css-1v3fvcr, .css-6qob1r, .css-1oe6wy4, .css-qbe2hs, .css-1d391kg, .css-15zrgzn {
+        font-family: monospace;
+    }
+    body {
+        background-color: black;
+    }
+    .gradient-text {
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: monospace;
+    }
+    .stTextInput, .stButton button {
+        font-family: monospace;
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        border: 1px solid #87CEEB;
+    }
+    .stTextInput > div > div > input {
+        font-family: monospace;
+    }
+    .stButton button {
+        font-family: monospace;
+    }
+    #myVideo {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%; 
+        min-height: 100%;
+    }
+    .content {
+        position: fixed;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        color: #f1f1f1;
+        width: 100%;
+        padding: 20px;
+    }
+</style>
+<video autoplay muted loop id="myVideo">
+    <source src="https://static.streamlit.io/examples/star.mp4" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
+"""
+
+# Inject CSS with markdown
+st.markdown(css, unsafe_allow_html=True)
+
+# Title with gradient text
+st.markdown('<h1 class="gradient-text">Copilot for your Career</h1>', unsafe_allow_html=True)
+
+uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
+
+if uploaded_file is not None:
+    pdf_text = extract_text_from_pdf(uploaded_file)
+    df = parse_pdf_to_dataframe(pdf_text)
+    st.write("Parsed Resume Data:")
+    st.dataframe(df)
+
+    if st.button("Get Review"):
+        with st.spinner("Analyzing resume..."):
+            prompt = f"Review the following resume, give a rating out of 10 as well:\n\n{pdf_text}"
             word_placeholder = st.empty()
             get_llm_reply(prompt)
+else:
+    prompt = st.text_input("Enter your message:", "")
+    if st.button("Ask"):
+        if prompt:
+            with st.spinner("Generating response..."):
+                word_placeholder = st.empty()
+                get_llm_reply(prompt)
+        else:
+            st.error("Please enter a message.")
+
+linkedin_url = st.text_input("Enter LinkedIn Profile URL:", "")
+if st.button("Scrape LinkedIn Profile"):
+    if linkedin_url:
+        with st.spinner("Scraping LinkedIn profile..."):
+            profile_text = scrape_linkedin_profile(linkedin_url)
+            if profile_text:
+                st.write("LinkedIn Profile Data:")
+                st.text_area("Profile Text", profile_text, height=300)
+                if st.button("Get Profile Review"):
+                    with st.spinner("Analyzing LinkedIn profile..."):
+                        prompt = f"Review the following LinkedIn profile, give suggestions for improvement:\n\n{profile_text}"
+                        word_placeholder = st.empty()
+                        get_llm_reply(prompt)
+            else:
+                st.error("Failed to scrape the LinkedIn profile. Please check the URL or try again later.")
     else:
-        st.error("Please enter a message.")
+        st.error("Please enter a LinkedIn profile URL.")
