@@ -2,7 +2,10 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
+from bs4 import BeautifulSoup
+import requests
 from typing import Generator
+import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
@@ -50,6 +53,19 @@ def parse_pdf_to_dataframe(pdf_text):
     data = {"text": [pdf_text]}
     df = pd.DataFrame(data)
     return df
+
+def scrape_linkedin_profile(url):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+        "Accept-Language": "en-US,en;q=0.9",
+    }
+    response = requests.get(url, headers=headers)
+    if response.status_code == 200:
+        soup = BeautifulSoup(response.content, "html.parser")
+        profile_text = soup.get_text(separator="\n")
+        return profile_text
+    else:
+        return None
 
 # Streamlit configuration for theme
 st.set_page_config(
@@ -105,7 +121,7 @@ css = """
 </style>
 <video autoplay muted loop id="myVideo">
     <source src="https://static.streamlit.io/examples/star.mp4" type="video/mp4">
-  
+    Your browser does not support HTML5 video.
 </video>
 """
 
@@ -137,3 +153,21 @@ else:
                 get_llm_reply(prompt)
         else:
             st.error("Please enter a message.")
+
+linkedin_url = st.text_input("Enter LinkedIn Profile URL:", "")
+if st.button("Scrape LinkedIn Profile"):
+    if linkedin_url:
+        with st.spinner("Scraping LinkedIn profile..."):
+            profile_text = scrape_linkedin_profile(linkedin_url)
+            if profile_text:
+                st.write("LinkedIn Profile Data:")
+                st.text_area("Profile Text", profile_text, height=300)
+                if st.button("Get Profile Review"):
+                    with st.spinner("Analyzing LinkedIn profile..."):
+                        prompt = f"Review the following LinkedIn profile, give suggestions for improvement:\n\n{profile_text}"
+                        word_placeholder = st.empty()
+                        get_llm_reply(prompt)
+            else:
+                st.error("Failed to scrape the LinkedIn profile. Please check the URL or try again later.")
+    else:
+        st.error("Please enter a LinkedIn profile URL.")
