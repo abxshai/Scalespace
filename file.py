@@ -4,12 +4,9 @@ from PyPDF2 import PdfReader
 from groq import Groq
 from bs4 import BeautifulSoup
 import requests
-from typing import Generator
-import time
-import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = 'your_api_key_here'
 
 client = Groq(api_key=API_KEY)
 
@@ -19,7 +16,7 @@ def get_llm_reply(prompt):
         messages=[
            {
             "role": "system",
-            "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
+            "content": "You are a career counseling and guidance bot, whose primary function is to help the user with their career-related queries by giving them specific guidance, career plans, and resources that can help them solve any career-related issues."
            },
            {
               "role": "user",
@@ -38,7 +35,7 @@ def get_llm_reply(prompt):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
-          # Add a slight delay for smoother streaming effect
+        # Add a slight delay for smoother streaming effect
     return response
 
 def extract_text_from_pdf(file):
