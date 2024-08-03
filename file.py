@@ -2,11 +2,10 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-from bs4 import BeautifulSoup
 import requests
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = 'your_api_key_here'
+API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
@@ -51,18 +50,6 @@ def parse_pdf_to_dataframe(pdf_text):
     df = pd.DataFrame(data)
     return df
 
-def scrape_linkedin_profile(url):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9",
-    }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, "html.parser")
-        profile_text = soup.get_text(separator="\n")
-        return profile_text
-    else:
-        return None
 
 # Streamlit configuration for theme
 st.set_page_config(
@@ -116,10 +103,7 @@ css = """
         padding: 20px;
     }
 </style>
-<video autoplay muted loop id="myVideo">
-    <source src="https://static.streamlit.io/examples/star.mp4" type="video/mp4">
-    Your browser does not support HTML5 video.
-</video>
+
 """
 
 # Inject CSS with markdown
