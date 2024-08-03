@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-from bs4 import BeautifulSoup
 import requests
 from typing import Generator
 import time
@@ -53,19 +52,6 @@ def parse_pdf_to_dataframe(pdf_text):
     data = {"text": [pdf_text]}
     df = pd.DataFrame(data)
     return df
-
-def scrape_linkedin_profile(url):
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-        "Accept-Language": "en-US,en;q=0.9",
-    }
-    response = requests.get(url, headers=headers)
-    if response.status_code == 200:
-        soup = BeautifulSoup(response.content, "html.parser")
-        profile_text = soup.get_text(separator="\n")
-        return profile_text
-    else:
-        return None
 
 # Streamlit configuration for theme
 st.set_page_config(
