@@ -7,7 +7,7 @@ import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = ''
+API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
@@ -60,6 +60,18 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# CSS to inject contained in a string
+css = """
+<style>
+    .gradient-text {
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+</style>
+"""
+
+# Inject CSS with markdown
 st.markdown(css, unsafe_allow_html=True)
 
 # Title with gradient text
