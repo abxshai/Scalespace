@@ -2,10 +2,12 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-import requests
+from typing import Generator
+import time
+import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = ''
 
 client = Groq(api_key=API_KEY)
 
@@ -15,7 +17,7 @@ def get_llm_reply(prompt):
         messages=[
            {
             "role": "system",
-            "content": "You are a career counseling and guidance bot, whose primary function is to help the user with their career-related queries by giving them specific guidance, career plans, and resources that can help them solve any career-related issues."
+            "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
            },
            {
               "role": "user",
@@ -34,7 +36,7 @@ def get_llm_reply(prompt):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
-        # Add a slight delay for smoother streaming effect
+          # Add a slight delay for smoother streaming effect
     return response
 
 def extract_text_from_pdf(file):
@@ -50,7 +52,6 @@ def parse_pdf_to_dataframe(pdf_text):
     df = pd.DataFrame(data)
     return df
 
-
 # Streamlit configuration for theme
 st.set_page_config(
     page_title="Copilot for your Career",
@@ -58,6 +59,38 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
+
+# CSS to inject contained in a string
+css = """
+<style>
+    body, .css-1n76uvr, .css-1v3fvcr, .css-6qob1r, .css-1oe6wy4, .css-qbe2hs, .css-1d391kg, .css-15zrgzn {
+        font-family: monospace;
+    }
+    body {
+        background-color: black;
+    }
+    .gradient-text {
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        font-family: monospace;
+    }
+    .stTextInput, .stButton button {
+        font-family: monospace;
+        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        border: 1px solid #87CEEB;
+    }
+    .stTextInput > div > div > input {
+        font-family: monospace;
+    }
+    .stButton button {
+        font-family: monospace;
+    }
+</style>
+"""
+
 # Inject CSS with markdown
 st.markdown(css, unsafe_allow_html=True)
 
@@ -81,10 +114,8 @@ else:
     prompt = st.text_input("Enter your message:", "")
     if st.button("Ask"):
         if prompt:
-            with st.spinner("Generating...."):
+            with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
                 get_llm_reply(prompt)
         else:
             st.error("Please enter a message.")
-
-
