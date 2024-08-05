@@ -7,7 +7,7 @@ import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = ''
+API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
@@ -80,7 +80,6 @@ css = """
         background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
-        border: 1px solid #87CEEB;
     }
     .stTextInput > div > div > input {
         font-family: monospace;
