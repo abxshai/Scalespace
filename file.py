@@ -58,54 +58,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-
-# CSS to inject contained in a string
-css = """
-<style>
-    body, .css-1n76uvr, .css-1v3fvcr, .css-6qob1r, .css-1oe6wy4, .css-qbe2hs, .css-1d391kg, .css-15zrgzn {
-        font-family: monospace;
-    }
-    body {
-        background-color: black;
-    }
-    .gradient-text {
-        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-family: monospace;
-    }
-    .stTextInput, .stButton button {
-        font-family: monospace;
-        background: -webkit-linear-gradient(left, #87CEEB, #FF00FF);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        border: 1px solid #87CEEB;
-    }
-    .stTextInput > div > div > input {
-        font-family: monospace;
-    }
-    .stButton button {
-        font-family: monospace;
-    }
-    #myVideo {
-        position: fixed;
-        right: 0;
-        bottom: 0;
-        min-width: 100%; 
-        min-height: 100%;
-    }
-    .content {
-        position: fixed;
-        bottom: 0;
-        background: rgba(0, 0, 0, 0.5);
-        color: #f1f1f1;
-        width: 100%;
-        padding: 20px;
-    }
-</style>
-
-"""
-
 # Inject CSS with markdown
 st.markdown(css, unsafe_allow_html=True)
 
