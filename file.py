@@ -129,26 +129,10 @@ else:
     prompt = st.text_input("Enter your message:", "")
     if st.button("Ask"):
         if prompt:
-            with st.spinner("Generating response..."):
+            with st.spinner("Generating...."):
                 word_placeholder = st.empty()
                 get_llm_reply(prompt)
         else:
             st.error("Please enter a message.")
 
-linkedin_url = st.text_input("Enter LinkedIn Profile URL:", "")
-if st.button("Scrape LinkedIn Profile"):
-    if linkedin_url:
-        with st.spinner("Scraping LinkedIn profile..."):
-            profile_text = scrape_linkedin_profile(linkedin_url)
-            if profile_text:
-                st.write("LinkedIn Profile Data:")
-                st.text_area("Profile Text", profile_text, height=300)
-                if st.button("Get Profile Review"):
-                    with st.spinner("Analyzing LinkedIn profile..."):
-                        prompt = f"Review the following LinkedIn profile, give suggestions for improvement:\n\n{profile_text}"
-                        word_placeholder = st.empty()
-                        get_llm_reply(prompt)
-            else:
-                st.error("Failed to scrape the LinkedIn profile. Please check the URL or try again later.")
-    else:
-        st.error("Please enter a LinkedIn profile URL.")
+
