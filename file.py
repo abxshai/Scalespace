@@ -7,7 +7,7 @@ import time
 import io
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = ''
 
 client = Groq(api_key=API_KEY)
 
@@ -59,7 +59,7 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
 )
-# Inject CSS with markdown
+
 st.markdown(css, unsafe_allow_html=True)
 
 # Title with gradient text
