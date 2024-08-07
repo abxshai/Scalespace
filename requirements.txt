@@ -2,5 +2,3 @@ streamlit
 groq
 pandas
 PyPDF2
-bs4
-Requests
