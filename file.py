@@ -2,73 +2,53 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-from typing import Generator
-import time
-import io
-import logging
-
-logging.basicConfig(level=logging.DEBUG)
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
-logging.debug("API_KEY set")
 
 client = Groq(api_key=API_KEY)
 
 def get_llm_reply(prompt, word_placeholder):
-    logging.debug(f"Prompt received: {prompt}")
-    try:
-        completion = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
-                },
-                {
-                    "role": "user",
-                    "content": prompt
-                },
-            ],
-            temperature=1,
-            max_tokens=1024,
-            top_p=1,
-            stream=True,
-            stop=None,
-        )
-        response = ""
-        for chunk in completion:
-            delta = chunk.choices[0].delta.content or ""
-            response += delta
-            word_placeholder.write(response)
-            time.sleep(0.1)
-        return response
-    except Exception as e:
-        logging.error(f"Error in get_llm_reply: {e}")
-        st.error(f"Error in generating reply: {e}")
+    completion = client.chat.completions.create(
+        model="llama-3.1-70b-versatile",
+        messages=[
+           {
+            "role": "system",
+            "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
+           },
+           {
+              "role": "user",
+              "content": prompt
+            },
+        ],
+        temperature=1,
+        max_tokens=1024,
+        top_p=1,
+        stream=True,
+        stop=None,
+    )
+    response = ""
+    for chunk in completion:
+        delta = chunk.choices[0].delta.content or ""
+        response += delta
+        # Use Streamlit's placeholder to update the response word by word
+        word_placeholder.write(response)
+        # Add a slight delay for smoother streaming effect
+
+    return response
 
 def extract_text_from_pdf(file):
-    logging.debug("Extracting text from PDF")
-    try:
-        pdf = PdfReader(file)
-        text = ""
-        for page_num in range(len(pdf.pages)):
-            page = pdf.pages[page_num]
-            text += page.extract_text()
-        return text
-    except Exception as e:
-        logging.error(f"Error in extract_text_from_pdf: {e}")
-        st.error(f"Error in extracting text from PDF: {e}")
+    pdf = PdfReader(file)
+    text = ""
+    for page_num in range(len(pdf.pages)):
+        page = pdf.pages[page_num]
+        text += page.extract_text()
+    return text
 
 def parse_pdf_to_dataframe(pdf_text):
-    logging.debug("Parsing PDF to DataFrame")
-    try:
-        data = {"text": [pdf_text]}
-        df = pd.DataFrame(data)
-        return df
-    except Exception as e:
-        logging.error(f"Error in parse_pdf_to_dataframe: {e}")
-        st.error(f"Error in parsing PDF to DataFrame: {e}")
+    data = {"text": [pdf_text]}
+    df = pd.DataFrame(data)
+    return df
 
 # Streamlit configuration for theme
 st.set_page_config(
@@ -78,6 +58,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# CSS to inject contained in a string
 css = """
 <style>
     .gradient-text {
@@ -88,7 +69,10 @@ css = """
 </style>
 """
 
+# Inject CSS with markdown
 st.markdown(css, unsafe_allow_html=True)
+
+# Title with gradient text
 st.markdown('<h1 class="gradient-text">Copilot for your Career</h1>', unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
