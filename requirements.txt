@@ -2,3 +2,5 @@ streamlit
 groq
 pandas
 PyPDF2
+typing
+io
