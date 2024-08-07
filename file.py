@@ -3,8 +3,7 @@ import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
 from typing import Generator
-import time
-import io
+
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
@@ -36,8 +35,6 @@ def get_llm_reply(prompt, word_placeholder):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
-        # Add a slight delay for smoother streaming effect
-        time.sleep(0.1)
     return response
 
 def extract_text_from_pdf(file):
