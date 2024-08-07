@@ -11,7 +11,7 @@ API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
-def get_llm_reply(prompt):
+def get_llm_reply(prompt, word_placeholder):
     completion = client.chat.completions.create(
         model="llama-3.1-70b-versatile",
         messages=[
@@ -36,7 +36,8 @@ def get_llm_reply(prompt):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
-          # Add a slight delay for smoother streaming effect
+        # Add a slight delay for smoother streaming effect
+        time.sleep(0.1)
     return response
 
 def extract_text_from_pdf(file):
@@ -89,13 +90,13 @@ if uploaded_file is not None:
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume, give a rating out of 10 as well:\n\n{pdf_text}"
             word_placeholder = st.empty()
-            get_llm_reply(prompt)
+            get_llm_reply(prompt, word_placeholder)
 else:
     prompt = st.text_input("Enter your message:", "")
     if st.button("Ask"):
         if prompt:
             with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
-                get_llm_reply(prompt)
+                get_llm_reply(prompt, word_placeholder)
         else:
             st.error("Please enter a message.")
