@@ -2,14 +2,15 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-
+from typing import Generator
+import io
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
-def get_llm_reply(prompt, word_placeholder):
+def get_llm_reply(prompt):
     completion = client.chat.completions.create(
         model="llama-3.1-70b-versatile",
         messages=[
@@ -34,6 +35,7 @@ def get_llm_reply(prompt, word_placeholder):
         response += delta
         # Use Streamlit's placeholder to update the response word by word
         word_placeholder.write(response)
+          # Add a slight delay for smoother streaming effect
     return response
 
 def extract_text_from_pdf(file):
@@ -86,13 +88,13 @@ if uploaded_file is not None:
         with st.spinner("Analyzing resume..."):
             prompt = f"Review the following resume, give a rating out of 10 as well:\n\n{pdf_text}"
             word_placeholder = st.empty()
-            get_llm_reply(prompt, word_placeholder)
+            get_llm_reply(prompt)
 else:
     prompt = st.text_input("Enter your message:", "")
     if st.button("Ask"):
         if prompt:
             with st.spinner("Generating response..."):
                 word_placeholder = st.empty()
-                get_llm_reply(prompt, word_placeholder)
+                get_llm_reply(prompt)
         else:
             st.error("Please enter a message.")
