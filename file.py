@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
-from groq import Groq
+import groq 
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
