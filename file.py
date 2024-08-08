@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader  # Changed to PyPDF2 for better compatibility
 from groq import Groq
-import time
+
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
@@ -33,7 +33,6 @@ def get_llm_reply(prompt, word_placeholder):
         delta = chunk.choices[0].delta.content or ""
         response += delta
         word_placeholder.write(response)
-        time.sleep(0.1)  # Add delay for streaming effect
 
     return response
 
