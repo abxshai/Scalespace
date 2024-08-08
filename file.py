@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
-from pdfreader import PyPDF2
-import groq 
+from pdfreader import PDFDocument
+from groq import Groq 
 
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
@@ -38,11 +38,10 @@ def get_llm_reply(prompt, word_placeholder):
     return response
 
 def extract_text_from_pdf(file):
-    pdf = PdfReader(file)
+    pdf = PDFDocument(file)
     text = ""
-    for page_num in range(len(pdf.pages)):
-        page = pdf.pages[page_num]
-        text += page.extract_text()
+    for page in pdf:
+        text += page.text
     return text
 
 def parse_pdf_to_dataframe(pdf_text):
