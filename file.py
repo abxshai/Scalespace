@@ -3,25 +3,31 @@ import pandas as pd
 from PyPDF2 import PdfReader  # Changed to PyPDF2 for better compatibility
 from groq import Groq
 
-
 # Replace 'your_api_key_here' with your actual API key
 API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
+# Initialize the session state to keep track of the conversation
+if "chat_history" not in st.session_state:
+    st.session_state.chat_history = [
+        {
+            "role": "system",
+            "content": "You are a career counseling and guidance bot, whose primary function is to help the user with their career-related queries by giving them specific guidance, career plans, and resources that can help them solve any career-related issues."
+        }
+    ]
+
 def get_llm_reply(prompt, word_placeholder):
+    # Add the user's query to the chat history
+    st.session_state.chat_history.append({
+        "role": "user",
+        "content": prompt
+    })
+
+    # Generate a response based on the entire chat history
     completion = client.chat.completions.create(
         model="llama-3.1-70b-versatile",
-        messages=[
-            {
-                "role": "system",
-                "content": "you are a career counseling and guidance bot, whose primary function is to help the user with their career related queries by giving them specific guidance, career plans, and resources that can help them solve any career related issues."
-            },
-            {
-                "role": "user",
-                "content": prompt
-            },
-        ],
+        messages=st.session_state.chat_history,
         temperature=1,
         max_tokens=1024,
         top_p=1,
@@ -33,6 +39,12 @@ def get_llm_reply(prompt, word_placeholder):
         delta = chunk.choices[0].delta.content or ""
         response += delta
         word_placeholder.write(response)
+
+    # Add the bot's response to the chat history
+    st.session_state.chat_history.append({
+        "role": "assistant",
+        "content": response
+    })
 
     return response
 
