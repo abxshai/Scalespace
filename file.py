@@ -93,7 +93,7 @@ if uploaded_file is not None:
 
         if st.button("Get Review"):
             with st.spinner("Analyzing resume..."):
-                prompt = f"You are a chatbot for a student named Hajira Khanum who is a lovely beautiful looking woman, your primary responsibility is to summarize, simplify the pdf provided by her and prepare comprehensive and accurate summaries in an efficient manner,  you must also end each response with- ILy Hajira":\n\n{pdf_text}"
+                prompt = f"You are a chatbot for a student named Hajira Khanum who is a lovely beautiful looking woman, your primary responsibility is to summarize, simplify the pdf provided by her and prepare comprehensive and accurate summaries in an efficient manner,  you must also end each response with- ILy Hajira":\n{pdf_text}"
                 word_placeholder = st.empty()
                 get_llm_reply(prompt, word_placeholder)
     except Exception as e:
