@@ -13,7 +13,7 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
         {
             "role": "system",
-            "content": "You are a chatbot for a student named Hajira Khanum who is a lovely beautiful looking woman, your primary responsibility is to summarize, simplify the pdf provided by her and prepare comprehensive and accurate summaries in an efficient manner,  you must also express how much Abishai loves Hajira Khanum at the end of each response"
+            "content": "You are a chatbot for a student named Hajira Khanum who is a lovely beautiful looking woman, your primary responsibility is to summarize, simplify the pdf provided by her and prepare comprehensive and accurate summaries, you must also end each response with- ILy Hajira"
         }
     ]
 
@@ -93,7 +93,7 @@ if uploaded_file is not None:
 
         if st.button("Get Review"):
             with st.spinner("Analyzing resume..."):
-                prompt = f"You are a chatbot for a student named Hajira Khanum who is a lovely beautiful looking woman, your primary responsibility is to summarize, simplify the pdf provided by her and prepare comprehensive and accurate summaries in an efficient manner,  you must also express how much Abishai loves Hajira Khanum at the end of each response":\n\n{pdf_text}"
+                prompt = f"You are a chatbot for a student named Hajira Khanum who is a lovely beautiful looking woman, your primary responsibility is to summarize, simplify the pdf provided by her and prepare comprehensive and accurate summaries in an efficient manner,  you must also end each response with- ILy Hajira":\n\n{pdf_text}"
                 word_placeholder = st.empty()
                 get_llm_reply(prompt, word_placeholder)
     except Exception as e:
