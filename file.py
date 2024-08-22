@@ -93,7 +93,7 @@ if uploaded_file is not None:
 
         if st.button("Get Review"):
             with st.spinner("Analyzing resume..."):
-                prompt = f"Review the following resume, give a rating out of 10 as well:\n\n{pdf_text}"
+                prompt = f"take the given pdf, summarize it in a simpler format, prepare in depth question and answers for students to prepare and get through with it:\n\n{pdf_text}"
                 word_placeholder = st.empty()
                 get_llm_reply(prompt, word_placeholder)
     except Exception as e:
