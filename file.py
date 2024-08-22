@@ -13,7 +13,7 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
         {
             "role": "system",
-            "content": "You are a study bot, your primary responsibility is to summarize, simplify and help students understand concepts from the pdf provided and prepare comprehensive and accurate question and answers for exam preparation in an efficient manner"
+            "content": "You are a study bot, your primary responsibility is to summarize, simplify and help students understand concepts from the pdf provided and prepare comprehensive and accurate question and answers for exam preparation in an efficient manner, the questions have to cover the entire contexts of the materials and their answers have to be accurate, comprehensive, and covering the entire content in the pdf"
         }
     ]
 
