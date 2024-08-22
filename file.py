@@ -13,7 +13,7 @@ if "chat_history" not in st.session_state:
     st.session_state.chat_history = [
         {
             "role": "system",
-            "content": "You are a career counseling and guidance bot, whose primary function is to help the user with their career-related queries by giving them specific guidance, career plans, and resources that can help them solve any career-related issues."
+            "content": "You are a study bot, your primary responsibility is to summarize, simplify and help students understand concepts from the pdf provided and prepare comprehensive and accurate question and answers for exam preparation in an efficient manner"
         }
     ]
 
@@ -93,7 +93,7 @@ if uploaded_file is not None:
 
         if st.button("Get Review"):
             with st.spinner("Analyzing resume..."):
-                prompt = f"take the given pdf, summarize it in a simpler format, prepare in depth question and answers for students to prepare and get through with it:\n\n{pdf_text}"
+                prompt = f"understand the given pdf, summarize it in a simpler format, prepare in depth question and answers for students to prepare and get through with it:\n\n{pdf_text}"
                 word_placeholder = st.empty()
                 get_llm_reply(prompt, word_placeholder)
     except Exception as e:
