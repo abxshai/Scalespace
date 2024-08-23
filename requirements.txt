@@ -1,5 +1,5 @@
 streamlit
 groq
 pandas
-pdfreader
+Pdfreader
 PyPDF2
