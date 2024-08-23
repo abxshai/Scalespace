@@ -69,9 +69,9 @@ if uploaded_file is not None:
         st.write("Parsed Resume Data:")
         st.dataframe(df)
 
-        if st.button("Send to Groq API"):
+        if st.button("Get Review"):
             with st.spinner("Analyzing resume..."):
-                prompt = f"Review the following resume:\n\n{pdf_text}"
+                prompt = f"Review the following resume, give it a rating out of 10, provide actionable advice on the words and points included:\n\n{pdf_text}"
                 word_placeholder = st.empty()  # Placeholder for streaming response
                 get_llm_reply(prompt)
 else:
