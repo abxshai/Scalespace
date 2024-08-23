@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader  # Changed to PyPDF2 for better compatibility
 from groq import Groq
 
 # Replace 'your_api_key_here' with your actual API key
-API_KEY = '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'
+API_KEY = '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'
 
 client = Groq(api_key=API_KEY)
 
