@@ -59,6 +59,7 @@ def parse_pdf_to_dataframe(pdf_text):
     return df
 
 st.title("PDF summarizer")
+st.text("ALL YOURS BABYJAAN")
 
 uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
 
