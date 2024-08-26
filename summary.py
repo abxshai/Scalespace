@@ -61,7 +61,7 @@ def parse_pdf_to_dataframe(pdf_text):
 st.title("PDF summarizer")
 
 
-uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
+uploaded_file = st.file_uploader("Upload your PDF for summary (limit: 13000 characters)", type=["pdf"])
 
 if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
@@ -70,7 +70,7 @@ if uploaded_file is not None:
         st.write("Parsed PDF data")
         st.dataframe(df)
 
-        if st.button("Get Review"):
+        if st.button("Get Summary"):
             with st.spinner("Summarizing Resume..."):
                 prompt = f"understand the given pdfs, summarize them in an indepth and easy to understand format with bullet points and maintain accuracy:\n\n{pdf_text}"
                 word_placeholder = st.empty()  # Placeholder for streaming response
