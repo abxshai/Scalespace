@@ -61,7 +61,7 @@ def parse_pdf_to_dataframe(pdf_text):
 st.title("PDF summarizer")
 
 
-uploaded_file = st.file_uploader("Upload your PDF for summary (limit: 13000 characters)", type=["pdf"])
+uploaded_file = st.file_uploader("Upload your PDF for summary limit: 13000 characters", type=["pdf"])
 
 if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
