@@ -2,28 +2,44 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader 
 from groq import Groq
-import numpy as np
-from PIL import Image
 
-def create_gradient_background(width, height):
-    # Create a numpy array for the gradient
-    gradient = np.zeros((height, width, 3), dtype=np.uint8)
-    
-    # Generate the blue to black gradient
-    for y in range(height):
-        blue_value = int(255 * (1 - y / height))
-        gradient[y, :] = [0, 0, blue_value]
-    
-    # Convert numpy array to PIL Image
-    return Image.fromarray(gradient)
 
-# Streamlit app
-st.set_page_config(layout="wide")
+# Set page config
+st.set_page_config(
+    layout="wide"
+)
 
-# Create the gradient background
-width = 800
-height = 400
-gradient_image = create_gradient_background(width, height)
+# Custom CSS for gradient background
+st.markdown(
+    """
+    <style>
+    .stApp {
+        background: linear-gradient(to bottom, #0000FF, #000000);
+        background-attachment: fixed;
+    }
+    .gradient-text {
+        background: -webkit-linear-gradient(#eee, #333);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# App title
+st.markdown("<h1 class='gradient-text'>Streamlit App with Gradient Background</h1>", unsafe_allow_html=True)
+
+# Add some content to the app
+st.write("This is a Streamlit app with a blue to black gradient background.")
+
+# Add a sample widget
+option = st.selectbox(
+    'What\'s your favorite color?',
+    ('Blue', 'Black', 'Other')
+)
+
+st.write('You selected:', option)
 
 # Set your actual API key here
 API_KEY = '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'
