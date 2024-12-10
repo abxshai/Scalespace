@@ -2,7 +2,5 @@ streamlit
 groq
 pandas
 PyPDF2 
-numpy
-PIL
-Image
+
 
