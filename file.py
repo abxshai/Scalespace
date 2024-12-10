@@ -2,6 +2,28 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader 
 from groq import Groq
+import numpy as np
+from PIL import Image
+
+def create_gradient_background(width, height):
+    # Create a numpy array for the gradient
+    gradient = np.zeros((height, width, 3), dtype=np.uint8)
+    
+    # Generate the blue to black gradient
+    for y in range(height):
+        blue_value = int(255 * (1 - y / height))
+        gradient[y, :] = [0, 0, blue_value]
+    
+    # Convert numpy array to PIL Image
+    return Image.fromarray(gradient)
+
+# Streamlit app
+st.set_page_config(layout="wide")
+
+# Create the gradient background
+width = 800
+height = 400
+gradient_image = create_gradient_background(width, height)
 
 # Set your actual API key here
 API_KEY = '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'
