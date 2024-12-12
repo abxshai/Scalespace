@@ -3,12 +3,6 @@ import pandas as pd
 from PyPDF2 import PdfReader 
 from groq import Groq
 
-
-# Set page config
-st.set_page_config(
-    layout="wide"
-)
-
 # Custom CSS for gradient background
 st.markdown(
     """
