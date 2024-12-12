@@ -84,7 +84,23 @@ def parse_pdf_to_dataframe(pdf_text):
 
 st.markdown("<h1 style='color:black;'>Copilot for your Career</h1>", unsafe_allow_html=True)
 
-uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
+st.markdown(
+    """
+    <style>
+    .upload-text {
+        color: black;
+        font-size: 18px;
+    }
+    </style>
+    """, 
+    unsafe_allow_html=True
+)
+
+# Display the custom styled text
+st.markdown('<p class="upload-text">Upload your resume (PDF)</p>', unsafe_allow_html=True)
+
+# File uploader
+uploaded_file = st.file_uploader("", type=["pdf"])
 
 if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
