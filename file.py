@@ -89,6 +89,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
+st.title("Copilot for your Career:)
 # Display the custom styled text
 st.markdown('<p class="upload-text">Upload your resume (PDF)</p>', unsafe_allow_html=True)
 
