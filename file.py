@@ -82,7 +82,7 @@ def parse_pdf_to_dataframe(pdf_text):
     df = pd.DataFrame(data)
     return df
 
-st.title("Copilot for your Career")
+st.markdown("<h1 style='color:black;'>Copilot for your Career</h1>", unsafe_allow_html=True)
 
 uploaded_file = st.file_uploader("Upload your resume (PDF)", type=["pdf"])
 
