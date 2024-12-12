@@ -91,10 +91,10 @@ st.markdown(
 
 st.title("Copilot for your Career")
 # Display the custom styled text
-st.text("upload your resume")
+
 
 # File uploader
-uploaded_file = st.file_uploader("", type=["pdf"])
+uploaded_file = st.file_uploader("upload your resume", type=["pdf"])
 
 if uploaded_file is not None:
     pdf_text = extract_text_from_pdf(uploaded_file)
