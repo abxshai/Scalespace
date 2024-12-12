@@ -76,7 +76,6 @@ def parse_pdf_to_dataframe(pdf_text):
     df = pd.DataFrame(data)
     return df
 
-st.markdown("<h1 style='color:black;'>Copilot for your Career</h1>", unsafe_allow_html=True)
 
 st.markdown(
     """
