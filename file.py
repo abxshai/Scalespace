@@ -8,7 +8,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(to bottom, #000000, #000080);
+        background: linear-gradient(to bottom, #000000, #000000, #000080);
         background-attachment: fixed;
     }
     .gradient-text {
@@ -91,7 +91,7 @@ st.markdown(
 
 st.title("Copilot for your Career")
 # Display the custom styled text
-st.markdown('<p class="upload-text">Upload your resume (PDF)</p>', unsafe_allow_html=True)
+st.text("upload your resume")
 
 # File uploader
 uploaded_file = st.file_uploader("", type=["pdf"])
