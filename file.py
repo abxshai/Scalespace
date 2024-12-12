@@ -14,7 +14,7 @@ st.markdown(
     """
     <style>
     .stApp {
-        background: linear-gradient(to bottom, #0000FF, #000000);
+        background: linear-gradient(to bottom, #F5F5DC, #000000);
         background-attachment: fixed;
     }
     .gradient-text {
@@ -26,20 +26,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# App title
-st.markdown("<h1 class='gradient-text'>Streamlit App with Gradient Background</h1>", unsafe_allow_html=True)
-
-# Add some content to the app
-st.write("This is a Streamlit app with a blue to black gradient background.")
-
-# Add a sample widget
-option = st.selectbox(
-    'What\'s your favorite color?',
-    ('Blue', 'Black', 'Other')
-)
-
-st.write('You selected:', option)
 
 # Set your actual API key here
 API_KEY = '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'
