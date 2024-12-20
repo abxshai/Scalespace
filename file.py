@@ -90,8 +90,7 @@ st.markdown(
 )
 
 st.title("ScaleSpace")
-st.text("Copilot for your Career")
-# Display the custom styled text
+
 
 
 # File uploader
