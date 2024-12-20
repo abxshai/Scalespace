@@ -89,7 +89,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("Copilot for your Career")
+st.title("ScaleSpace")
+st.text("Copilot for your Career")
 # Display the custom styled text
 
 
