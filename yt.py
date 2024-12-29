@@ -1,27 +1,16 @@
 import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
-from groq import Groq
-import google.generativeai as genai
-import yt_dlp
-import requests
-import os
-from dotenv import load_dotenv
+from yt_dlp import YoutubeDL
+from google.generativeai import GenerativeModel, configure
 
-# Load API keys from environment variables or .env file
-load_dotenv()  # Load variables from .env file
-GROQ_API_KEY = os.getenv("GROQ_API_KEY")
-GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+# Embed API Keys directly
+GROQ_API_KEY = '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'
+GENAI_API_KEY = 'AIzaSyDghQB-hpVMNhdd2Fd4JPgRNr_eZ-1GMp0'
 
-# Validate API keys
-if not GROQ_API_KEY or not GENAI_API_KEY:
-    st.error("API keys are missing. Please set GROQ_API_KEY and GENAI_API_KEY in your environment variables or .env file.")
-    st.stop()
-
-# Initialize Groq client and GenAI
-client = Groq(api_key=GROQ_API_KEY)
-genai.configure(api_key=GENAI_API_KEY)
-genai_model = genai.GenerativeModel("gemini-1.5-flash")
+# Initialize Generative AI
+configure(api_key=GENAI_API_KEY)
+genai_model = GenerativeModel("gemini-1.5-flash")
 
 # Streamlit layout styling
 st.markdown(
@@ -33,29 +22,10 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html=True
+    unsafe_allow_html=True,
 )
 
 # Helper functions
-def get_llm_reply(prompt):
-    """Get reply from the Groq AI model."""
-    try:
-        completion = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
-            messages=[
-                {"role": "system", "content": "You are a career guidance assistant."},
-                {"role": "user", "content": prompt},
-            ],
-            temperature=1,
-            max_tokens=1024,
-        )
-        response = completion.choices[0].message.content
-        return response
-    except Exception as e:
-        st.error(f"Error with LLM: {e}")
-        return None
-
-
 def extract_text_from_pdf(file):
     """Extract text from an uploaded PDF."""
     try:
@@ -68,36 +38,28 @@ def extract_text_from_pdf(file):
         st.error(f"Error reading PDF: {e}")
         return ""
 
-
 def get_youtube_transcript(video_url):
-    """Fetch transcript from YouTube using yt-dlp."""
-    options = {
-        'quiet': True,
-        'writesubtitles': True,
-        'writeautomaticsub': True,
-        'skip_download': True,
-        'subtitleslangs': ['en'],
-        'outtmpl': '%(id)s.%(ext)s',
-    }
-
+    """Fetch transcript using yt-dlp."""
     try:
-        with yt_dlp.YoutubeDL(options) as ydl:
+        ydl_opts = {
+            "format": "bestaudio/best",
+            "quiet": True,
+            "skip_download": True,
+            "writeautomaticsub": True,
+        }
+        with YoutubeDL(ydl_opts) as ydl:
             info = ydl.extract_info(video_url, download=False)
-            subtitles = info.get("automatic_captions") or info.get("subtitles")
-            
-            if subtitles and 'en' in subtitles:
-                srt_url = subtitles['en'][0]['url']
-                response = requests.get(srt_url)
-                if response.status_code == 200:
-                    return response.text
-                else:
-                    return "Error fetching subtitles."
+            subtitles = info.get("subtitles") or {}
+            if "en" in subtitles:
+                url = subtitles["en"][0]["url"]
+                with YoutubeDL({}) as ydl_sub:
+                    transcript = ydl_sub.urlopen(url).read().decode("utf-8")
+                    return transcript
             else:
-                return "No subtitles available for this video."
+                raise ValueError("No subtitles found for the video.")
     except Exception as e:
         st.error(f"Error fetching transcript: {e}")
         return None
-
 
 def summarize_text(text):
     """Summarize text using GenAI."""
@@ -107,7 +69,6 @@ def summarize_text(text):
     except Exception as e:
         st.error(f"Error summarizing text: {e}")
         return None
-
 
 # Main App Layout
 st.title("Copilot for Your Career")
@@ -127,10 +88,13 @@ with tabs[0]:
             if st.button("Analyze Resume"):
                 with st.spinner("Analyzing resume..."):
                     prompt = f"Review the following resume and provide feedback:\n{pdf_text}"
-                    response = get_llm_reply(prompt)
-                    if response:
-                        st.subheader("Resume Feedback:")
-                        st.write(response)
+                    try:
+                        response = genai_model.generate_content(prompt)
+                        if response:
+                            st.subheader("Resume Feedback:")
+                            st.write(response.text)
+                    except Exception as e:
+                        st.error(f"Error analyzing resume: {e}")
 
 # YouTube Summarizer Tab
 with tabs[1]:
@@ -153,7 +117,10 @@ with tabs[2]:
     if st.button("Get Advice"):
         if prompt:
             with st.spinner("Fetching advice..."):
-                response = get_llm_reply(prompt)
-                if response:
-                    st.subheader("Career Advice:")
-                    st.write(response)
+                try:
+                    response = genai_model.generate_content(prompt)
+                    if response:
+                        st.subheader("Career Advice:")
+                        st.write(response.text)
+                except Exception as e:
+                    st.error(f"Error fetching career advice: {e}")
