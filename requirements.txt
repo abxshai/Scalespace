@@ -3,7 +3,7 @@ groq
 pandas
 PyPDF2 
 google.generativeai
-yt_dlp
+youtube_transcript_api
 
 
 
