@@ -2,12 +2,21 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-from youtube_transcript_api import YouTubeTranscriptApi
 import google.generativeai as genai
+import yt_dlp
+import requests
+import os
+from dotenv import load_dotenv
 
-# Set API keys
-GROQ_API_KEY = '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'  # Replace with your Groq API key
-GENAI_API_KEY = 'AIzaSyDghQB-hpVMNhdd2Fd4JPgRNr_eZ-1GMp0'  # Replace with your Generative AI API key
+# Load API keys from environment variables or .env file
+load_dotenv()  # Load variables from .env file
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+GENAI_API_KEY = os.getenv("GENAI_API_KEY")
+
+# Validate API keys
+if not GROQ_API_KEY or not GENAI_API_KEY:
+    st.error("API keys are missing. Please set GROQ_API_KEY and GENAI_API_KEY in your environment variables or .env file.")
+    st.stop()
 
 # Initialize Groq client and GenAI
 client = Groq(api_key=GROQ_API_KEY)
@@ -40,7 +49,6 @@ def get_llm_reply(prompt):
             temperature=1,
             max_tokens=1024,
         )
-        # Extract the content from the first choice
         response = completion.choices[0].message.content
         return response
     except Exception as e:
@@ -61,11 +69,31 @@ def extract_text_from_pdf(file):
         return ""
 
 
-def get_youtube_transcript(video_id):
-    """Fetch transcript from YouTube using the YouTube Transcript API."""
+def get_youtube_transcript(video_url):
+    """Fetch transcript from YouTube using yt-dlp."""
+    options = {
+        'quiet': True,
+        'writesubtitles': True,
+        'writeautomaticsub': True,
+        'skip_download': True,
+        'subtitleslangs': ['en'],
+        'outtmpl': '%(id)s.%(ext)s',
+    }
+
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        return " ".join([t['text'] for t in transcript])
+        with yt_dlp.YoutubeDL(options) as ydl:
+            info = ydl.extract_info(video_url, download=False)
+            subtitles = info.get("automatic_captions") or info.get("subtitles")
+            
+            if subtitles and 'en' in subtitles:
+                srt_url = subtitles['en'][0]['url']
+                response = requests.get(srt_url)
+                if response.status_code == 200:
+                    return response.text
+                else:
+                    return "Error fetching subtitles."
+            else:
+                return "No subtitles available for this video."
     except Exception as e:
         st.error(f"Error fetching transcript: {e}")
         return None
@@ -110,9 +138,8 @@ with tabs[1]:
     video_url = st.text_input("Enter YouTube Video URL")
     if st.button("Summarize Video"):
         if video_url:
-            video_id = video_url.split("v=")[-1].split("&")[0]
             with st.spinner("Fetching and summarizing video transcript..."):
-                transcript = get_youtube_transcript(video_id)
+                transcript = get_youtube_transcript(video_url)
                 if transcript:
                     summary = summarize_text(transcript)
                     if summary:
