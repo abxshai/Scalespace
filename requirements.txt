@@ -4,8 +4,6 @@ pandas
 PyPDF2 
 google.generativeai
 yt_dlp
-requests
-os
-load_dotenv
+
 
 
