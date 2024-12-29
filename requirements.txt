@@ -3,5 +3,9 @@ groq
 pandas
 PyPDF2 
 google.generativeai
-youtube_transcript_api
+yt_dlp
+requests
+os
+load_dotenv
+
 
