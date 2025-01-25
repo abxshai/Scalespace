@@ -6,9 +6,8 @@ from youtube_transcript_api import YouTubeTranscriptApi
 import google.generativeai as genai
 
 # API keys
-GROQ_API_KEY = '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'  # Replace with your Groq API key
-GENAI_API_KEY = 'AIzaSyDghQB-hpVMNhdd2Fd4JPgRNr_eZ-1GMp0'  # Replace with your Generative AI API key
-
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]  
+GENAI_API_KEY = st.secrets["GENAI_API_KEY"]
 # Initialize Groq client and GenAI
 client = Groq(api_key=GROQ_API_KEY)
 genai.configure(api_key=GENAI_API_KEY)
