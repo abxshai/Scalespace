@@ -32,7 +32,7 @@ def get_llm_reply(prompt):
     """Get reply from the Groq AI model."""
     try:
         completion = client.chat.completions.create(
-            model="llama-3.1-70b-versatile",
+            model="llama-3.3-70b-versatile",
             messages=[
                 {"role": "system", "content": "You are a career guidance assistant."},
                 {"role": "user", "content": prompt},
