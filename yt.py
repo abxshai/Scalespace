@@ -2,16 +2,12 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-from youtube_transcript_api import YouTubeTranscriptApi
-import google.generativeai as genai
+from pytube import YouTube
 
-# API keys
+# API key
 GROQ_API_KEY = st.secrets["GROQ_API_KEY"]  
-GENAI_API_KEY = st.secrets["GENAI_API_KEY"]
-# Initialize Groq client and GenAI
+# Initialize Groq client
 client = Groq(api_key=GROQ_API_KEY)
-genai.configure(api_key=GENAI_API_KEY)
-genai_model = genai.GenerativeModel("gemini-1.5-flash")
 
 # Streamlit layout styling
 st.markdown(
@@ -39,13 +35,11 @@ def get_llm_reply(prompt):
             temperature=1,
             max_tokens=1024,
         )
-        # Extract the content from the first choice
         response = completion.choices[0].message.content
         return response
     except Exception as e:
         st.error(f"Error with LLM: {e}")
         return None
-
 
 def extract_text_from_pdf(file):
     """Extract text from an uploaded PDF."""
@@ -59,26 +53,39 @@ def extract_text_from_pdf(file):
         st.error(f"Error reading PDF: {e}")
         return ""
 
-
-def get_youtube_transcript(video_id):
-    """Fetch transcript from YouTube using the YouTube Transcript API."""
+def get_youtube_transcript(video_url):
+    """Fetch transcript from YouTube using pytube."""
     try:
-        transcript = YouTubeTranscriptApi.get_transcript(video_id)
-        return " ".join([t['text'] for t in transcript])
+        yt = YouTube(video_url)
+        # Try to get English captions first; if not, use the first available caption.
+        if 'en' in yt.captions:
+            caption = yt.captions['en']
+        elif yt.captions:
+            caption = list(yt.captions.values())[0]
+        else:
+            st.error("No captions available.")
+            return None
+        
+        transcript = caption.generate_srt_captions()
+        # Remove timestamps and sequence numbers
+        lines = []
+        for line in transcript.splitlines():
+            if not line.isdigit() and '-->' not in line:
+                lines.append(line)
+        return " ".join(lines)
     except Exception as e:
         st.error(f"Error fetching transcript: {e}")
         return None
 
-
 def summarize_text(text):
-    """Summarize text using GenAI."""
+    """Summarize text using Llama-3 via Groq."""
     try:
-        response = genai_model.generate_content(f"Summarize this:\n{text}")
-        return response.text
+        prompt = f"Summarize this:\n{text}"
+        response = get_llm_reply(prompt)
+        return response
     except Exception as e:
         st.error(f"Error summarizing text: {e}")
         return None
-
 
 # Main App Layout
 st.title("Copilot for Your Career")
@@ -109,9 +116,8 @@ with tabs[1]:
     video_url = st.text_input("Enter YouTube Video URL")
     if st.button("Summarize Video"):
         if video_url:
-            video_id = video_url.split("v=")[-1].split("&")[0]
             with st.spinner("Fetching and summarizing video transcript..."):
-                transcript = get_youtube_transcript(video_id)
+                transcript = get_youtube_transcript(video_url)
                 if transcript:
                     summary = summarize_text(transcript)
                     if summary:
