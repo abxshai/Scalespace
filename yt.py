@@ -2,10 +2,12 @@ import streamlit as st
 import pandas as pd
 from PyPDF2 import PdfReader
 from groq import Groq
-from pytube import YouTube
+import yt_dlp
+import requests
+import re
 
 # API key
-GROQ_API_KEY = st.secrets["GROQ_API_KEY"]  
+GROQ_API_KEY = st.secrets["GROQ_API_KEY"]
 # Initialize Groq client
 client = Groq(api_key=GROQ_API_KEY)
 
@@ -54,25 +56,51 @@ def extract_text_from_pdf(file):
         return ""
 
 def get_youtube_transcript(video_url):
-    """Fetch transcript from YouTube using pytube."""
+    """Fetch transcript from YouTube using yt-dlp."""
+    ydl_opts = {
+        'skip_download': True,
+        'writesubtitles': True,
+        'writeautomaticsub': True,
+        'subtitlesformat': 'vtt',
+        'quiet': True,
+    }
     try:
-        yt = YouTube(video_url)
-        # Try to get English captions first; if not, use the first available caption.
-        if 'en' in yt.captions:
-            caption = yt.captions['en']
-        elif yt.captions:
-            caption = list(yt.captions.values())[0]
+        with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+            info = ydl.extract_info(video_url, download=False)
+        subtitles = info.get('subtitles', {})
+        auto_subs = info.get('automatic_captions', {})
+        
+        # Prefer manual English subtitles if available, else auto-generated.
+        if 'en' in subtitles:
+            sub_url = subtitles['en'][0]['url']
+        elif 'en' in auto_subs:
+            sub_url = auto_subs['en'][0]['url']
         else:
             st.error("No captions available.")
             return None
-        
-        transcript = caption.generate_srt_captions()
-        # Remove timestamps and sequence numbers
+
+        # Download the subtitle file
+        response = requests.get(sub_url)
+        if response.status_code != 200:
+            st.error("Failed to download subtitles.")
+            return None
+        vtt_content = response.text
+
+        # Process VTT content to remove timestamps and metadata.
         lines = []
-        for line in transcript.splitlines():
-            if not line.isdigit() and '-->' not in line:
-                lines.append(line)
-        return " ".join(lines)
+        for line in vtt_content.splitlines():
+            # Skip WEBVTT header, empty lines, timestamps, and sequence numbers.
+            if line.startswith("WEBVTT") or line.strip() == "":
+                continue
+            if re.match(r'^\d+$', line.strip()):
+                continue
+            if re.match(r'\d{2}:\d{2}:\d{2}\.\d{3}', line):
+                continue
+            if '-->' in line:
+                continue
+            lines.append(line.strip())
+        transcript = " ".join(lines)
+        return transcript
     except Exception as e:
         st.error(f"Error fetching transcript: {e}")
         return None
